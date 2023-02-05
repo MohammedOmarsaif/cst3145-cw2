@@ -4,6 +4,8 @@ const morgan = require("morgan");
 var path = require("path");
 var filesys = require("fs");
 
+let app = express();
+
 const logsPath = path.join(__dirname, 'logs');
 if (!filesys.existsSync(logsPath)) {
 filesys.mkdirSync(logsPath);
@@ -30,7 +32,7 @@ const { MongoClient, ServerApiVersion, ObjectID, ObjectId } = require("mongodb")
 const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 let db = client.db(dbName);
 
-let app = express();
+
 
 var staticFolder = path.resolve(__dirname, "public");
 app.use("/public", express.static(staticFolder));

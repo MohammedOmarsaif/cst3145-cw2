@@ -93,7 +93,7 @@ app.get("/api/sorting/:collection?/:field?/:ordering?", async function (req, res
             "Possible URL": "/api/sorting/lessons/subject/1"
         });
     }
-    else if (!order) {
+    else if (!ordering) {
 
         const coll_ = await coll.find({}).sort({ [field]: 1 }).toArray();
 

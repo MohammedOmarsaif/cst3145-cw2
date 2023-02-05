@@ -169,3 +169,7 @@
 ::ffff:127.0.0.1 - - [05/Feb/2023:19:21:44 +0000] "GET /public/css/bootstrap.min.css HTTP/1.1" 304 - "http://localhost:3000/public/index.html" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
 ::ffff:127.0.0.1 - - [05/Feb/2023:19:21:44 +0000] "GET /public/css/stylesheet.css HTTP/1.1" 304 - "http://localhost:3000/public/index.html" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
 ::ffff:127.0.0.1 - - [05/Feb/2023:19:21:44 +0000] "GET /public/js/vue-2.7.8.js HTTP/1.1" 304 - "http://localhost:3000/public/index.html" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
+::ffff:127.0.0.1 - - [05/Feb/2023:22:32:53 +0000] "GET / HTTP/1.1" 200 983 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
+::ffff:127.0.0.1 - - [05/Feb/2023:22:32:57 +0000] "GET //api/sorting/lessons/price/1 HTTP/1.1" 404 167 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
+::ffff:127.0.0.1 - - [05/Feb/2023:22:33:37 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
+::ffff:127.0.0.1 - - [05/Feb/2023:22:33:40 +0000] "GET /api/sorting/lessons/price/1 HTTP/1.1" 200 1663 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"

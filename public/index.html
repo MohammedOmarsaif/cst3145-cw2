@@ -57,13 +57,13 @@
                 <div class="col-md-12">
                     <h3 class="text-center">List of Subjects:</h3>
                     <br>
-                    <input type="radio" v-on:click="sorting()" id="byprice" value="byprice" v-model="sorted" />
+                    <input type="radio" v-on:click="ByPrice()" id="byprice" value="byprice" v-model="sorted" />
                     <label for="byprice">Sort By Price</label>
 
-                    <input type="radio" v-on:click="sorting()" id="byname" value="byname" v-model="sorted" />
+                    <input type="radio" v-on:click="byname()" id="byname" value="byname" v-model="sorted" />
                     <label for="byname">Sort By Ascending</label>
 
-                    <input type="radio" v-on:click="sorting()" id="bydesc" value="bydesc" v-model="sorted" />
+                    <input type="radio" v-on:click="byname()" id="bydesc" value="bydesc" v-model="sorted" />
                     <label for="bydesc">Sort By Descending</label>
                 </div>
                 <div v-for="subject in subjects" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
@@ -106,17 +106,20 @@
             </div>
             <div v-else>
                 <div class="row">
-                    <div class="offset-md-4 col-md-5 text-center">
-                        <h3 style="color:rgb(2, 183, 255)">Shopping Cart</h3>
+                    <div class="col-md-12 col-md-12">
+                        <h3 class=" text-center" style="color:rgb(2, 183, 255)">Shopping Cart</h3>
                         <div class="row">
-                            <div v-for="subject in subjects" class="col-lg-4 col-md-4 text-center"
-                                style="border:1px dotted black;" v-if="cart.includes(subject.id)">
+                            <div v-for="subject in cart" class="col-lg-3 col-md-3"
+                                style="border:1px dotted black;" >
                                 <div class="p-1">
                                     <img v-bind:src="subject.image" class="" style="width: 100px;" />
                                     <div class="clearfix"></div>
-                                    <p class="m-0">{{subject.subject}}</p>
-                                    <p class="m-0">{{subject.location}}</p>
-                                    <p class="m-0">{{subject.price}}</p>
+                                    <p class="m-0">Subject:<br>{{subject.subject}}</p>
+                                    <p class="m-0">location:<br>{{subject.location}}</p>
+                                    <p class="m-0">Price:£{{subject.price}}</p>
+                                    <p class="m-0">Book Spaces: <span class="info-success">{{subject.spaces - subject.spaces + 1}}</span> is on cart!</p>
+
+
                                 </div>
                             </div>
                         </div>
@@ -291,6 +294,16 @@
                 },
                 onKeyUp() {
                     this.viewSearchResult = true;
+                    fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/find/lessons/"+this.search).then(
+                    function(response) {
+                            response.json().then(
+                                function(json) {
+                                BookSys.FindSubjects = json;
+                                }
+                            )
+                        }
+                    );
+                        
                     if (this.search === "") {
                         this.viewSearchResult = false;
                     }
@@ -316,11 +329,13 @@
                     return subjects.spaces - cartItemCount;
                 },
                 SearchFiltered() {
-                    return this.subjects.filter(subject => {
+                    if (!this.search) return this.subjects
+                    return this.FindSubjects.filter(subject => {
                         return subject.subject.toLowerCase().includes(this.search.toLowerCase())
                     })
                 },
-                sorting() {
+                ByPrice() {
+                    
                     // SORT BY PRICE
                     function compare(a, b) {
                         if (a.price > b.price) return 1;

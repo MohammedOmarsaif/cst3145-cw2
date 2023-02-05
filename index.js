@@ -37,7 +37,6 @@ const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 let db = client.db(dbName);
 
 
-
 var staticFolder = path.resolve(__dirname, "public");
 app.use("/public", express.static(staticFolder));
 
@@ -48,51 +47,222 @@ app.use(morgan("short"));
 
 
 app.get("/", function (req, res) {
-    res.send("Welcome");
+    res.send({
+        "Message": "Welcome...! CST3145 Coursework II. RestfulAPI",
+        "API": {
+            "get": process.env.URL || "http://localhost:3000" + "/api/lessons/",
+            "get (single record by id)": process.env.URL || "http://localhost:3000" + "/api/lessons/1",
+            "get (single record by objectid)": process.env.URL || "http://localhost:3000" + "/api/lessons/63df860af60471ad43cba852",
+            "post": process.env.URL || "http://localhost:3000" + "/api/lessons/",
+            "post": process.env.URL || "http://localhost:3000" + "/api/orders/",
+            "post": process.env.URL || "http://localhost:3000" + "/api/users/",
+            "put (single record by id)": process.env.URL || "http://localhost:3000" + "/api/lessons/1",
+            "put (single record by objectid)": process.env.URL || "http://localhost:3000" + "/api/lessons/63df860af60471ad43cba852",
+            "delete (single record by id)": process.env.URL || "http://localhost:3000" + "/api/lessons/1",
+            "delete (single record by objectid)": process.env.URL || "http://localhost:3000" + "/api/lessons/63df860af60471ad43cba852",
+        },
+        "IMPORTANT URLs": {
+            "HTTP AWS API": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/",
+            "HTTPS AWS API": "https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/",
+            "Github Repository": "YET TO COME",
+            "GITHUB SITE": "YET TO COME"
+        }
+    });
 });
 
-app.route("/api/:collection?/").get(
+app.get("/api/sorting/:collection?/:field?/:ordering?", async function (req, res) {
+
+    const { collection, field, ordering } = req.params;
+
+    coll = db.collection(collection);
+
+    if (!collection) {
+
+        res.send({
+            "ERROR": "Its look like you are sorting but what you are sorting is not clear",
+            "API": {
+                "example": process.env.URL || "http://localhost:3000" + "/api/sorting/lessons/Science",
+            }
+        });
+
+    }
+    else if (!key) res.send("Filter Keys not defined");
+    else if (!order) {
+        const coll_obj = await coll.find({}).sort({ [key]: 1 }).toArray();
+        res.send(coll_obj);
+    }
+    else if (order === "1") {
+        const coll_obj = await coll.find({}).sort({ [key]: 1 }).toArray();
+        res.send(coll_obj);
+    }
+    else if (order === "-1") {
+        const coll_obj = await coll.find({}).sort({ [key]: -1 }).toArray();
+        res.send(coll_obj);
+    }
+
+});
+
+
+app.get("/api/find/:collection?/:value?", async function (req, res) {
+    const { collection, value } = req.params;
+
+    if (!collection) {
+        res.send({
+            "ERROR": "Its looklike you provide incomplete URL, while you are finding record you need to provide which keyword you are looking for inside collection",
+            "API": {
+                "example": process.env.URL || "http://localhost:3000" + "/api/find/lessons/Science",
+            }
+        });
+    } else if (!value) {
+
+        res.send({
+            "ERROR": "Its look like you provide incomplete URL, while you are finding record you need to provide which keyword you are looking for inside collection",
+            "API": {
+                "example": process.env.URL || "http://localhost:3000" + "/api/find/lessons/Science",
+            }
+        });
+
+    }
+    else {
+
+        coll = db.collection(collection);
+
+        const coll_obj = await coll.find({}).toArray();
+        const coll_ = coll_obj.filter(doc => doc.subject.toLowerCase().includes(value.toLowerCase()));
+
+        res.send(coll_);
+
+    }
+
+});
+
+app.route("/api/:collection?/:id?").get(
     async function (req, res) {
-        const { collection, opt, key } = req.params;
+        const { collection, id } = req.params;
 
         if (!collection) {
 
             res.send("Invalid Collection");
 
-        } else if (!opt) {
+        } else {
 
-            coll = db.collection(collection);
-            const coll_obj = await coll.find({}).toArray();
-            res.send(coll_obj);
+            if (collection === 'find') {
+                console.log({
+                    "err": "Find is not collection. triggered from wrong place. If you see this message. need to resolve the request, which should not run from here",
+                    "url": "/api/find/" + id
+                });
+            }
 
-        } else if (!key) {
-            
-            res.send("Collection: " + collection + " > Option: " + opt);
+            const coll = db.collection(collection);
 
-        }else{
-            
-            res.send("Collection: " + collection + " > Option: " + opt + " Key: "+ key);
+            // SEARCH BY ID
+            if (!id) {
+                const coll_ = await coll.find({}).toArray();
+                res.send(coll_);
+            } else {
+                // SEARCH BY OBJECT ID
+                if (id.length > 4) {
 
+                    const ObjectId = require('mongodb').ObjectId;
+
+                    try {
+                        const mongo_object_id = new ObjectId(id);
+
+                        const coll_ = await coll.find({ _id: mongo_object_id }).toArray();
+
+                        res.send(coll_);
+
+                    } catch (error) {
+                        res.send("Invalid Request string");
+                    }
+
+                } else {
+                    const coll_ = await coll.find({ id: parseInt(id) }).toArray();
+                    res.send(coll_);
+                }
+            }
         }
     }
 ).post(
     async function (req, res, next) {
-    
-            // req.body
-            req.collection.insertOne(req.body, function(err, results){
-            if(err){
-                return next(err);
-            }
-            res.send(results);
-            });
-        
+
+        const { collection } = req.params;
+
+        let coll = db.collection(collection);
+
+        const bodyobj = req.body;
+
+        await coll.insertOne(bodyobj);
+
+        res.send(bodyobj);
     }
 ).put(
 
+    async function (req, res, next) {
+
+        const { collection, id } = req.params;
+
+        if (!collection) {
+
+            res.send("Nothing to update! Invalid Collection");
+
+        } else {
+
+            if (!id) {
+
+                res.send({ err: "Nothing to update! Invalid Collection" });
+
+            } else {
+
+                let coll = db.collection(collection);
+
+                const bodyobj = req.body;
+
+                // upldate by object id
+                if (id.length > 4 && typeof id === 'string') {
+
+                    const ObjectId = require('mongodb').ObjectId;
+                    const mongo_object_id = new ObjectId(id);
+
+                    await coll.updateOne({ _id: mongo_object_id }, { $set: bodyobj });
+
+                } else {
+                    // update by object id
+
+                    await coll.updateOne({ id: parseInt(id) }, { $set: bodyobj });
+
+                }
+
+                res.send(bodyobj);
+            }
+
+        }
+    }
+
 ).delete(
 
-);
+    async function (req, res) {
 
+        const { resource, id } = req.params;
+
+        const ObjectId = require('mongodb').ObjectId;
+        const mongo_object_id = new ObjectId(id);
+
+        let collection = db.collection(resource);
+
+        if (id.length > 4 && typeof id === 'string') {
+
+            await collection.deleteOne({ _id: mongo_object_id });
+
+        } else {
+            await collection.deleteOne({ id: parseInt(id) });
+        }
+
+        res.send({ id });
+
+    }
+
+);
 
 
 const url = process.env.URL || "http://localhost:";

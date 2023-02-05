@@ -120,6 +120,16 @@
                     <!-- This input field is bound to 'lastName' in the 'order' object -->
                     <input  v-model.number="Orders.phone" class="form-control" type="number" />
                     </p>
+                    <p>
+                    <strong>Email:</strong><br>
+                    <!-- This input field is bound to 'lastName' in the 'order' object -->
+                    <input  v-model.number="Users.email" class="form-control" type="email" />
+                    </p>
+                    <p>
+                    <strong>Password:</strong><br>
+                    <!-- This input field is bound to 'lastName' in the 'order' object -->
+                    <input  v-model.number="Users.pwd" class="form-control" type="password" />
+                    </p>
                     
                     <div class="bg-grey">
                         <h2>Order Information</h2>
@@ -151,6 +161,10 @@ el: '#VueApp',
         Orders:{
             firstName: "",
             phone: ""
+        },
+        Users:{
+            email: "",
+            password: ""
         },
         search: '',
         viewSearchResult: false,

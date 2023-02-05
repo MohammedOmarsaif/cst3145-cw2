@@ -1,0 +1,194 @@
+{
+	"id": "6e7acef5-c086-4662-b06f-17223f4f4a07",
+	"name": "lesson",
+	"timestamp": "2023-02-05T23:31:27.782Z",
+	"collection_id": "0-4681e8a8-dec6-4c43-b22a-6cc9c7abda0d",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "2a28ba60-6456-4853-8117-c27864eb4ea1",
+			"name": "All Lessons",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/",
+			"time": 476,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				476
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "9431356f-9d9e-47c9-b256-cc51eef5d8c6",
+			"name": "All Orders",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users/",
+			"time": 457,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				457
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "679fdec3-b3d2-431c-ae60-c8bc67ad4a1c",
+			"name": "All Users",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/",
+			"time": 450,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				450
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "6745442f-202e-4112-8e6a-d5a25a6b214f",
+			"name": "search",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/find/lessons/e",
+			"time": 473,
+			"responseCode": {
+				"code": 502,
+				"name": "Bad Gateway"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				473
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "ee14ee91-7506-43f7-afbd-97642947c46e",
+			"name": "sorting",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/sorting/lessons/price/-1",
+			"time": 397,
+			"responseCode": {
+				"code": 502,
+				"name": "Bad Gateway"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				397
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "42b8d06a-d698-43b6-b558-64f0e635d9b7",
+			"name": "Lesson Update",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/999",
+			"time": 383,
+			"responseCode": {
+				"code": 502,
+				"name": "Bad Gateway"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				383
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "147a7e78-cc86-4791-a251-72ff154f31de",
+			"name": "Add Lesson - Post",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/",
+			"time": 970,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				970
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "510d1ad3-1e41-499f-8271-8063c7145a33",
+			"name": "Lesson Delete",
+			"url": "http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/999",
+			"time": 208,
+			"responseCode": {
+				"code": 502,
+				"name": "Bad Gateway"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				208
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 3814,
+	"collection": {
+		"requests": [
+			{
+				"id": "2a28ba60-6456-4853-8117-c27864eb4ea1",
+				"method": "GET"
+			},
+			{
+				"id": "9431356f-9d9e-47c9-b256-cc51eef5d8c6",
+				"method": "GET"
+			},
+			{
+				"id": "679fdec3-b3d2-431c-ae60-c8bc67ad4a1c",
+				"method": "GET"
+			},
+			{
+				"id": "6745442f-202e-4112-8e6a-d5a25a6b214f",
+				"method": "GET"
+			},
+			{
+				"id": "ee14ee91-7506-43f7-afbd-97642947c46e",
+				"method": "GET"
+			},
+			{
+				"id": "42b8d06a-d698-43b6-b558-64f0e635d9b7",
+				"method": "PUT"
+			},
+			{
+				"id": "147a7e78-cc86-4791-a251-72ff154f31de",
+				"method": "POST"
+			},
+			{
+				"id": "510d1ad3-1e41-499f-8271-8063c7145a33",
+				"method": "DELETE"
+			}
+		]
+	}
+}

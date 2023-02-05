@@ -61,11 +61,15 @@
                         v-model="sortBy" />
                     <label for="byprice">Sort By Price</label>
 
-                    <input type="radio" name="sortOrder" id="sortOrder" value="sortOrder" v-model="sorted" />
-                    <label for="sortOrder">Ascending</label>
+                    <label for="sortOrder">
+                        <input type="radio" name="sortOrder" id="sortOrder" value="sortOrder" v-model="sorted" />
+                        Ascending
+                    </label>
 
-                    <input type="radio" name="sortOrder" id="sortOrder" value="sortOrder" v-model="sorted" />
-                    <label for="sortOrder">Descending</label>
+                    <label for="sortOrder">
+                        <input type="radio" name="sortOrder" id="sortOrder" value="sortOrder" v-model="sorted" />
+                        Descending
+                    </label>
                 </div>
                 <div v-for="subject in subjects" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
 

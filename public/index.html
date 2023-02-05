@@ -1,1 +1,216 @@
-<h1>This</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CW1 - Vue Web Based App - Booking System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <!-- Place your Font Awesome kit's code here -->
+    <script src="https://kit.fontawesome.com/baa20b8907.js" crossorigin="anonymous"></script>
+    <script src="js/vue-2.7.8.js"></script>
+    <!-- <script src="js/subjects.js"></script> -->
+</head>
+<body>
+    
+    <div id="VueApp">
+    
+        <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="index.html" class="m-2">
+            <i class="fa-solid fa-book fa-5x" style="font-size: 25px;"></i> 
+                    {{ website_title }}
+        </a>
+        <input type="text" v-model="search" class="form-control" v-on:keyup="onKeyUp" style="max-width:250px !important;" placeholder="Search Subjects.."/>
+        <ul class="navbar-nav mt-2 mb-2 mr-2">
+            <li class="nav-item active">
+                <button v-on:click="showCheckout" class="btn btn-primary">
+                <!-- 'cartItemCount' is used the same way as a data property. -->
+                {{ cartItemCount }}
+                <!-- add the cart icon -->
+                <span class="fas fa-cart-plus"></span> Checkout
+                </button>     
+            </li>
+        </ul>
+        </nav>
+
+        
+        <div class="container search-items" v-if="viewSearchResult" v-for="subject in SearchFiltered">
+            <hr>
+            <img v-bind:src="subject.image" class="float-left" style="width: 100px;"/>
+            <h5 class="m-0">{{subject.subject}}</h5>            
+            
+            <p>Price: £{{ subject.price }}</p>
+            <p>Availability: {{ subject.spaces }}</p>
+            <p>Location: {{ subject.location }}</p>
+            <div class="clearfix"></div>
+            <hr>
+          </div>
+
+        <main class="container">
+            
+            <div v-if="ToggleCheckout" class="row">
+                
+                <!-- get subjects list -->
+                <div class="col-md-12"><h3 class="text-center">List of Subjects:</h3>
+                <br>
+                <input type="radio" v-on:click="SortByPrice()" id="byprice" value="byprice" v-model="sorted" />
+                <label for="byprice">Sort By Price</label>
+            </div>
+                <div v-for="subject in subjects" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mt-2">
+                    
+                    <div class="item-box ">
+                        
+                        <div class="float-left">
+                            <h3 class="item-title">Subject: {{ subject.subject }}</h3>
+                            
+                            <p>Price: £{{ subject.price }}</p>
+                            <p>Location: {{ subject.location }}</p>
+                        
+                            <p v-if='subject.spaces === cartCount(subject.id)'>Spaces: <span>Not available :(</span></p>
+                            <p v-else>Spaces: Available!</p>
+                            
+                        </div>
+                        <div class="float-right">
+                            <img v-bind:src="subject.image" alt="">
+                            <div class="clearfix"></div>
+                            <button v-if="canAddToCart" v-on:click="addItemtocart(subject)" class="btn btn-primary">Add to cart</button>
+                            <!-- This button will be displayed otherwise -->
+                            <button disabled='disabled' v-else>
+                            Add to cart
+                            </button>
+                            <div class="clearfix"></div>
+                            
+                            <div class="text-center">
+                                <span v-if='subject.spaces === cartCount(subject.id)'>All out!</span>
+                                <span v-else-if="subject.spaces - cartCount(subject.id) < 5">
+                                Only {{subject.spaces - cartCount(subject.id)}} left!
+                                </span>
+                                <span v-else>Buy now!</span>
+                            </div>
+                        </div>
+                        
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <div class="row">
+                    <div class="offset-md-4 col-md-5 text-center">
+                    <h3 style="color:rgb(2, 183, 255)">Shopping Cart</h3>
+                    <div class="row"><div v-for="subject in subjects" class="col-lg-4 col-md-4 text-center" style="border:1px dotted black;" v-if="cart.includes(subject.id)">
+                        <div class="p-1">
+                            <img v-bind:src="subject.image" class="" style="width: 100px;"/>
+                            <div class="clearfix"></div>
+                            <p class="m-0">{{subject.subject}}</p>
+                            <p class="m-0">{{subject.location}}</p>
+                            <p class="m-0">{{subject.price}}</p>
+                        </div>
+                    </div></div>
+                    <br>
+                    <br>
+                    <hr>
+                    <h3>Checkout Page</h3>
+                    <p>
+                    <strong>First Name:</strong><br>
+                    <!-- This input field is bound to 'firstName' in the 'order' object -->
+                    <input v-model="Orders.firstName" class="form-control"/>
+                    </p>
+                    <p>
+                    <strong>Phone:</strong><br>
+                    <!-- This input field is bound to 'lastName' in the 'order' object -->
+                    <input  v-model.number="Orders.phone" class="form-control" type="number" />
+                    </p>
+                    
+                    <div class="bg-grey">
+                        <h2>Order Information</h2>
+                        <div class="clearfix"></div>
+                        <p>First Name: {{Orders.firstName}}</p>
+                        <p>Phone: {{Orders.phone}}</p>
+
+                        <button v-on:click="submitForm" class="btn btn-success">Place Order</button>
+                    </div>
+
+                    
+                    </div>
+                </div>
+            </div>
+            </main>
+        
+    </div>
+
+<script>
+let BookSys = new Vue({ // the root Vue instance
+el: '#VueApp',
+    data: { 
+        website_title: 'After School Class App - Vue Web Based App',
+        // Getting VUE Objects from subjects.js
+        subjects: subjects,
+        cart: [], // array to store items in shopping cart
+        ToggleCheckout: true,
+        // canAddToCart: false,
+        Orders:{
+            firstName: "",
+            phone: ""
+        },
+        search: '',
+        viewSearchResult: false,
+        Availability: "Yes",
+    },
+    methods: {
+        addItemtocart(subject) {
+            this.cart.push( subject.id );
+        },
+        showCheckout() {
+            this.ToggleCheckout = this.ToggleCheckout ? false : true;
+        },
+        submitForm() {
+            alert('Order submitted!')
+        },
+        onKeyUp(){
+            this.viewSearchResult = true;
+            if(this.search === ""){
+                this.viewSearchResult = false;    
+            }
+        },
+        canAddToCart(subject) {
+        return this.subject.spaces > this.cartItemCount(subject.id);
+        },
+        cartCount(id) {
+        let count = 0;
+        for(let i = 0; i < this.cart.length; i++) {
+        if (this.cart[i] === id) {
+        count++;
+        }
+        }
+        return count;
+        }
+    },
+    computed: {
+        cartItemCount: function() { // the property name
+        return this.cart.length || "";
+        },
+        checkLeftSpaces(){       
+        return subjects.spaces - cartItemCount;
+        },
+        SearchFiltered() {
+        return this.subjects.filter(subject => {
+            return subject.subject.toLowerCase().includes(this.search.toLowerCase())
+        })
+        },
+        SortByPrice() {
+            // SORT BY PRICE
+            function compare(a, b) {
+            if (a.price > b.price) return 1;
+            if (a.price < b.price) return -1;
+            return 0;
+            }
+            // sort the 'products' array and return it
+            return this.subjects.sort(compare);
+        }
+    }
+})
+</script>
+</body>
+</html>

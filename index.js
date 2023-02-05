@@ -1,18 +1,22 @@
 var express = require("express");
 const cors = require("cors");
-const morgan = require("morgan");
-var path = require("path");
 var filesys = require("fs");
+var path = require("path");
+const morgan = require("morgan");
+
 
 let app = express();
 
+var staticPath = path.resolve(__dirname, "public/img");
+app.use("/img", express.static(staticPath));
+
 const logsPath = path.join(__dirname, 'logs');
 if (!filesys.existsSync(logsPath)) {
-filesys.mkdirSync(logsPath);
+    filesys.mkdirSync(logsPath);
 }
 const logsReq = filesys.createWriteStream(path.join(logsPath, 'logs'), { flags: 'a' });
 
-app.use( morgan( 'combined' , { stream: logsReq }) );
+app.use(morgan('combined', { stream: logsReq }));
 
 
 let propertiesReader = require("properties-reader");
@@ -42,28 +46,30 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("short"));
 
-
-
-app.get("/",function(req, res){
+app.get("/", function (req, res) {
     res.send("Welcome");
 });
 
 app.route("/api/:collection?/:opt?/:param?").get(
-    async function(req,res){
-        const { collection, opt, param} = req.params;
+    async function (req, res) {
+        const { collection, opt, param } = req.params;
 
-        if(!collection){
-            
-            res.send("NOT VALID collection");
-        
-        } else if(!opt){
+        if (!collection) {
 
-            res.send("Collection: " + collection);
-        
-        } else if(!param){
+            res.send("Invalid Collection");
 
-            res.send("Collection: " + collection + " > Option: " + collection);
-        
+        } else if (!opt) {
+
+            coll = db.collection(collection);
+
+            const coll_obj = await coll.find({}).toArray();
+
+            res.send(coll_obj);
+
+        } else if (!param) {
+
+            res.send("Collection: " + collection + " > Option: " + opt);
+
         }
     }
 ).post(
@@ -78,6 +84,6 @@ app.route("/api/:collection?/:opt?/:param?").get(
 
 const url = process.env.URL || "http://localhost:";
 const port = process.env.PORT || 3000;
-app.listen(port, function(){
-    console.log("App is started on "+ url + port);
+app.listen(port, function () {
+    console.log("App is started on " + url + port);
 });

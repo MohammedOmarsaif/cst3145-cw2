@@ -1,0 +1,27 @@
+.item-box{
+    margin:0;
+    border:2px solid black;
+    border-radius: 30px;
+    /* width: 350px; */
+    padding: 10px 20px;
+    /* margin:10px; */
+}
+.search-items p{
+    margin:0;
+}
+.item-box img{
+    width: 100px;
+}
+.item-title{
+    margin-top:10px;
+    font-size: 20px;
+}
+.item-box p{
+    font-size: 18px;
+    margin: 0;
+}
+.bg-grey{
+    background-color: rgb(238, 238, 238);
+    border-radius: 12px;
+    padding: 20px;
+}

@@ -57,14 +57,15 @@
                 <div class="col-md-12">
                     <h3 class="text-center">List of Subjects:</h3>
                     <br>
-                    <input type="radio" v-on:click="sorting()" name="sortby" id="byprice" value="byprice" v-model="sortby" />
+                    <input type="radio" v-on:click="sorting()" name="sortBy" id="byprice" value="byprice"
+                        v-model="sortBy" />
                     <label for="byprice">Sort By Price</label>
 
-                    <input type="radio" name="sorted" id="byname" value="byname" v-model="sorted" />
-                    <label for="byname">Ascending</label>
+                    <input type="radio" name="sortOrder" id="sortOrder" value="sortOrder" v-model="sorted" />
+                    <label for="sortOrder">Ascending</label>
 
-                    <input type="radio" name="sorted" id="bydesc" value="bydesc" v-model="sorted" />
-                    <label for="bydesc">Descending</label>
+                    <input type="radio" name="sortOrder" id="sortOrder" value="sortOrder" v-model="sorted" />
+                    <label for="sortOrder">Descending</label>
                 </div>
                 <div v-for="subject in subjects" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
 
@@ -109,15 +110,15 @@
                     <div class="col-md-12 col-md-12">
                         <h3 class=" text-center" style="color:rgb(2, 183, 255)">Shopping Cart</h3>
                         <div class="row">
-                            <div v-for="subject in cart" class="col-lg-3 col-md-3"
-                                style="border:1px dotted black;" >
+                            <div v-for="subject in cart" class="col-lg-3 col-md-3" style="border:1px dotted black;">
                                 <div class="p-1">
                                     <img v-bind:src="subject.image" class="" style="width: 100px;" />
                                     <div class="clearfix"></div>
                                     <p class="m-0">Subject:<br>{{subject.subject}}</p>
                                     <p class="m-0">location:<br>{{subject.location}}</p>
                                     <p class="m-0">Price:£{{subject.price}}</p>
-                                    <p class="m-0">Book Spaces: <span class="info-success">{{subject.spaces - subject.spaces + 1}}</span> is on cart!</p>
+                                    <p class="m-0">Book Spaces: <span class="info-success">{{subject.spaces -
+                                            subject.spaces + 1}}</span> is on cart!</p>
 
 
                                 </div>
@@ -161,16 +162,16 @@
 
                     </div>
                 </div>
-                
+
             </div>
-        
+
             <br>
-        <button @click="addItemtoDB" class="btn btn-success" style="width:100%;">
-            Add Lesson
-        </button>
+            <button @click="addItemtoDB" class="btn btn-success" style="width:100%;">
+                Add Lesson
+            </button>
         </main>
 
-        
+
     </div>
 
     <script>
@@ -183,7 +184,8 @@
                 cart: [], // array to store items in shopping cart
                 ToggleCheckout: true,
                 sorted: "",
-                sortby:"",
+                sortBy: "price",
+                sortOrder: "1",
                 // canAddToCart: false,
                 Orders: {
                     name: "",
@@ -213,6 +215,24 @@
                 );
             },
             methods: {
+                
+                sorting: function() {
+                    fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/sorting/lessons/" + this.sortBy + "/" + this.sortOrder).then(
+                        function (response) {
+                            response.json().then( function (json) { 
+                                BookSys.subjects = json; 
+                            } )
+                        }
+                    );
+                    // SORT BY PRICE
+                    // function compare(a, b) {
+                    //     if (a.price > b.price) return 1;
+                    //     if (a.price < b.price) return -1;
+                    //     return 0;
+                    // }
+                    // sort the 'products' array and return it
+                    // return this.subjects.sort(compare);
+                },
                 addItemtoDB() {
                     const addLesson = {
                         "id": 1,
@@ -295,16 +315,16 @@
                 },
                 onKeyUp() {
                     this.viewSearchResult = true;
-                    fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/find/lessons/"+this.search).then(
-                    function(response) {
+                    fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/find/lessons/" + this.search).then(
+                        function (response) {
                             response.json().then(
-                                function(json) {
-                                BookSys.FindSubjects = json;
+                                function (json) {
+                                    BookSys.FindSubjects = json;
                                 }
                             )
                         }
                     );
-                        
+
                     if (this.search === "") {
                         this.viewSearchResult = false;
                     }
@@ -335,16 +355,6 @@
                         return subject.subject.toLowerCase().includes(this.search.toLowerCase())
                     })
                 },
-                sorting() {
-                    // SORT BY PRICE
-                    function compare(a, b) {
-                        if (a.price > b.price) return 1;
-                        if (a.price < b.price) return -1;
-                        return 0;
-                    }
-                    // sort the 'products' array and return it
-                    return this.subjects.sort(compare);
-                }
             }
         })
     </script>

@@ -46,6 +46,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("short"));
 
+
 app.get("/", function (req, res) {
     res.send("Welcome");
 });
@@ -75,7 +76,17 @@ app.route("/api/:collection?/").get(
         }
     }
 ).post(
-
+    async function (req, res, next) {
+    
+            // req.body
+            req.collection.insertOne(req.body, function(err, results){
+            if(err){
+                return next(err);
+            }
+            res.send(results);
+            });
+        
+    }
 ).put(
 
 ).delete(

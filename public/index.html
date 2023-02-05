@@ -8,8 +8,9 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/stylesheet.css">
-    <script src="https://kit.fontawesome.com/baa20b8907.js" crossorigin="anonymous"></script>
+    <script src="httpss://kit.fontawesome.com/baa20b8907.js" crossorigin="anonymous"></script>
     <script src="js/vue-2.7.8.js"></script>
+    <script src="js/subjects.js"></script>
 </head>
 <body>
     
@@ -147,7 +148,10 @@
                 </div>
             </div>
             </main>
-        
+            <button @click="addItemtoDB">
+                <span class="fas fa-save"></span>
+                Test Insert Data Lesson
+           </button>
     </div>
 
 <script>
@@ -156,7 +160,7 @@ el: '#VueApp',
     data: { 
         website_title: 'After School Class App - Vue Web Based App',
         // Getting VUE Objects from subjects.js
-        subjects: [],
+        subjects: subjects,
         cart: [], // array to store items in shopping cart
         ToggleCheckout: true,
         // canAddToCart: false,
@@ -176,11 +180,12 @@ el: '#VueApp',
         Availability: "Yes",
     },
     created: function() {
-            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons").then(
+            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons").then(
                 function(response) {
                     response.json().then(
                         function(json) {
                         BookSys.subjects = json;
+                        console.log(BookSys.subjects);
                         }
                     )
                 }
@@ -198,7 +203,7 @@ el: '#VueApp',
                         "location": "London",
                 }
 
-                fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons",{
+                fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons",{
                     method: "POST",
                     headers:{ "Content-Type": "application/json", },
                     body: JSON.stringify(addLesson)
@@ -233,21 +238,21 @@ el: '#VueApp',
             
             const UpdatingLesson = {
                 "id": BookSys.subjects.id,
-                "spaces": ObjectLesson[0].spaces,
+                "spaces": ObjectLesson[0].spaces - 1,
             }
-            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/"+BookSys.subjects.id,{
+            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/"+BookSys.subjects.id,{
                 method: "PUT",
                 headers:{ "Content-Type": "application/json", },
                 body: JSON.stringify(UpdatingLesson)
             })
 
-            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
+            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
                 method: "POST",
                 headers:{ "Content-Type": "application/json", },
                 body: JSON.stringify(addUser)
             })
 
-            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders",{
+            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders",{
                 method: "POST",
                 headers:{ "Content-Type": "application/json", },
                 body: JSON.stringify(addOrder)

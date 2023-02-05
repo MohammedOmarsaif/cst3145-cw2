@@ -113,12 +113,12 @@
                     <p>
                     <strong>First Name:</strong><br>
                     <!-- This input field is bound to 'firstName' in the 'order' object -->
-                    <input v-model="Orders.firstName" class="form-control"/>
+                    <input v-model="Orders.name" class="form-control"/>
                     </p>
                     <p>
                     <strong>Phone:</strong><br>
                     <!-- This input field is bound to 'lastName' in the 'order' object -->
-                    <input  v-model.number="Orders.phone" class="form-control" type="number" />
+                    <input  v-model.number="Orders.contactno" class="form-control" type="number" />
                     </p>
                     <p>
                     <strong>Email:</strong><br>
@@ -128,14 +128,16 @@
                     <p>
                     <strong>Password:</strong><br>
                     <!-- This input field is bound to 'lastName' in the 'order' object -->
-                    <input  v-model.number="Users.pwd" class="form-control" type="password" />
+                    <input  v-model.number="Users.pass" class="form-control" type="password" />
                     </p>
                     
                     <div class="bg-grey">
                         <h2>Order Information</h2>
                         <div class="clearfix"></div>
-                        <p>First Name: {{Orders.firstName}}</p>
-                        <p>Phone: {{Orders.phone}}</p>
+                        <p>Name: {{Orders.name}}</p>
+                        <p>Phone: {{Orders.contactno}}</p>
+                        <p>Your email: {{Users.email}}</p>
+                        
 
                         <button v-on:click="submitForm" class="btn btn-success">Place Order</button>
                     </div>
@@ -159,12 +161,15 @@ el: '#VueApp',
         ToggleCheckout: true,
         // canAddToCart: false,
         Orders:{
-            firstName: "",
-            phone: ""
+            name: this.Orders.name,
+            contactno: this.Orders.contactno,
+            lesson_id: 1,
+            spaces: 1,
         },
         Users:{
-            email: "",
-            password: ""
+            name: this.Orders.name,
+            email: this.Users.email,
+            pass: this.Users.pass,
         },
         search: '',
         viewSearchResult: false,
@@ -176,7 +181,6 @@ el: '#VueApp',
                     response.json().then(
                         function(json) {
                         BookSys.subjects = json;
-                        console.log(subjects);
                         }
                     )
                 }
@@ -190,7 +194,36 @@ el: '#VueApp',
             this.ToggleCheckout = this.ToggleCheckout ? false : true;
         },
         submitForm() {
-            alert('Order submitted!')
+            if (this.cart.length == null  || this.cart.length === 0) {
+                alert('Please cart any item.');
+                return;
+            }
+            const addUser = {
+                "name": this.Orders.name,
+                "email": this.Users.email,
+                "pass": this.Users.password
+            }
+            
+            const addOrder = {
+                "name": this.Orders.name,
+                "contactno": this.Orders.contactno,
+                "lesson_id": this.Orders.lesson_id,
+                "spaces": this.Orders.spaces,
+            }
+            
+            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
+                method: "POST",
+                headers:{ "Content-Type": "application/json", },
+                body: JSON.stringify(addUser)
+            })
+
+            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders",{
+                method: "POST",
+                headers:{ "Content-Type": "application/json", },
+                body: JSON.stringify(addOrder)
+            })
+
+            alert('Order has been placed.');
         },
         onKeyUp(){
             this.viewSearchResult = true;

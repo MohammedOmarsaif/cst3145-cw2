@@ -2,7 +2,15 @@ var express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 var path = require("path");
-var fs = require("fs");
+var filesys = require("fs");
+
+const logsPath = path.join(__dirname, 'logs');
+if (!filesys.existsSync(logsPath)) {
+filesys.mkdirSync(logsPath);
+}
+const logsReq = filesys.createWriteStream(path.join(logsPath, 'logs'), { flags: 'a' });
+
+app.use( morgan( 'combined' , { stream: logsReq }) );
 
 
 let propertiesReader = require("properties-reader");

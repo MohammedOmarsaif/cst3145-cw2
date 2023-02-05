@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>CST3145 - Coursework 2 - Frontend, Express and Server Api</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,84 +12,94 @@
     <script src="js/vue-2.7.8.js"></script>
     <!-- <script src="js/subjects.js"></script> -->
 </head>
+
 <body>
-    
+
     <div id="VueApp">
-    
+
         <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="index.html" class="m-2">
-            <i class="fa-solid fa-book fa-5x" style="font-size: 25px;"></i> 
-                    {{ website_title }}
-        </a>
-        <input type="text" v-model="search" class="form-control" v-on:keyup="onKeyUp" style="max-width:250px !important;" placeholder="Search Subjects.."/>
-        <ul class="navbar-nav mt-2 mb-2 mr-2">
-            <li class="nav-item active">
-                <button v-on:click="showCheckout" class="btn btn-primary">
-                <!-- 'cartItemCount' is used the same way as a data property. -->
-                {{ cartItemCount }}
-                <!-- add the cart icon -->
-                <span class="fas fa-cart-plus"></span> Checkout
-                </button>     
-            </li>
-        </ul>
+            <a class="navbar-brand" href="index.html" class="m-2">
+                <i class="fa-solid fa-book fa-5x" style="font-size: 25px;"></i>
+                {{ website_title }}
+            </a>
+            <input type="text" v-model="search" class="form-control" v-on:keyup="onKeyUp"
+                style="max-width:250px !important;" placeholder="Search Subjects.." />
+            <ul class="navbar-nav mt-2 mb-2 mr-2">
+                <li class="nav-item active">
+                    <button v-on:click="showCheckout" class="btn btn-primary">
+                        <!-- 'cartItemCount' is used the same way as a data property. -->
+                        {{ cartItemCount }}
+                        <!-- add the cart icon -->
+                        <span class="fas fa-cart-plus"></span> Checkout
+                    </button>
+                </li>
+            </ul>
         </nav>
 
-        
+
         <div class="container search-items" v-if="viewSearchResult" v-for="subject in SearchFiltered">
             <hr>
-            <img v-bind:src="subject.image" class="float-left" style="width: 100px;"/>
-            <h5 class="m-0">{{subject.subject}}</h5>            
-            
+            <img v-bind:src="subject.image" class="float-left" style="width: 100px;" />
+            <h5 class="m-0">{{subject.subject}}</h5>
+
             <p>Price: £{{ subject.price }}</p>
             <p>Availability: {{ subject.spaces }}</p>
             <p>Location: {{ subject.location }}</p>
             <div class="clearfix"></div>
             <hr>
-          </div>
+        </div>
 
         <main class="container">
-            
+
             <div v-if="ToggleCheckout" class="row">
-                
+
                 <!-- get subjects list -->
-                <div class="col-md-12"><h3 class="text-center">List of Subjects:</h3>
-                <br>
-                <input type="radio" v-on:click="SortByPrice()" id="byprice" value="byprice" v-model="sorted" />
-                <label for="byprice">Sort By Price</label>
-            </div>
-                <div v-for="subject in subjects" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mt-2">
-                    
+                <div class="col-md-12">
+                    <h3 class="text-center">List of Subjects:</h3>
+                    <br>
+                    <input type="radio" v-on:click="sorting()" id="byprice" value="byprice" v-model="sorted" />
+                    <label for="byprice">Sort By Price</label>
+
+                    <input type="radio" v-on:click="sorting()" id="byname" value="byname" v-model="sorted" />
+                    <label for="byname">Sort By Ascending</label>
+
+                    <input type="radio" v-on:click="sorting()" id="bydesc" value="bydesc" v-model="sorted" />
+                    <label for="bydesc">Sort By Descending</label>
+                </div>
+                <div v-for="subject in subjects" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
+
                     <div class="item-box ">
-                        
+
                         <div class="float-left">
                             <h3 class="item-title">Subject: {{ subject.subject }}</h3>
-                            
+
                             <p>Price: £{{ subject.price }}</p>
                             <p>Location: {{ subject.location }}</p>
-                        
+
                             <p v-if='subject.spaces === cartCount(subject.id)'>Spaces: <span>Not available :(</span></p>
-                            <p v-else>Spaces: Available!</p>
-                            
+                            <p v-else>Spaces: {{ subject.spaces }} Available!</p>
+
                         </div>
                         <div class="float-right">
                             <img v-bind:src="subject.image" alt="">
                             <div class="clearfix"></div>
-                            <button v-if="canAddToCart" v-on:click="addItemtocart(subject)" class="btn btn-primary">Add to cart</button>
+                            <button v-if="canAddToCart" v-on:click="addItemtocart(subject)" class="btn btn-primary">Add
+                                to cart</button>
                             <!-- This button will be displayed otherwise -->
                             <button disabled='disabled' v-else>
-                            Add to cart
+                                Add to cart
                             </button>
                             <div class="clearfix"></div>
-                            
+
                             <div class="text-center">
                                 <span v-if='subject.spaces === cartCount(subject.id)'>All out!</span>
                                 <span v-else-if="subject.spaces - cartCount(subject.id) < 5">
-                                Only {{subject.spaces - cartCount(subject.id)}} left!
+                                    Only {{subject.spaces - cartCount(subject.id)}} left!
                                 </span>
                                 <span v-else>Buy now!</span>
                             </div>
                         </div>
-                        
+
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -96,215 +107,232 @@
             <div v-else>
                 <div class="row">
                     <div class="offset-md-4 col-md-5 text-center">
-                    <h3 style="color:rgb(2, 183, 255)">Shopping Cart</h3>
-                    <div class="row"><div v-for="subject in subjects" class="col-lg-4 col-md-4 text-center" style="border:1px dotted black;" v-if="cart.includes(subject.id)">
-                        <div class="p-1">
-                            <img v-bind:src="subject.image" class="" style="width: 100px;"/>
-                            <div class="clearfix"></div>
-                            <p class="m-0">{{subject.subject}}</p>
-                            <p class="m-0">{{subject.location}}</p>
-                            <p class="m-0">{{subject.price}}</p>
+                        <h3 style="color:rgb(2, 183, 255)">Shopping Cart</h3>
+                        <div class="row">
+                            <div v-for="subject in subjects" class="col-lg-4 col-md-4 text-center"
+                                style="border:1px dotted black;" v-if="cart.includes(subject.id)">
+                                <div class="p-1">
+                                    <img v-bind:src="subject.image" class="" style="width: 100px;" />
+                                    <div class="clearfix"></div>
+                                    <p class="m-0">{{subject.subject}}</p>
+                                    <p class="m-0">{{subject.location}}</p>
+                                    <p class="m-0">{{subject.price}}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div></div>
-                    <br>
-                    <br>
-                    <hr>
-                    <h3>Checkout Page</h3>
-                    <p>
-                    <strong>First Name:</strong><br>
-                    <!-- This input field is bound to 'firstName' in the 'order' object -->
-                    <input v-model="Orders.name" class="form-control"/>
-                    </p>
-                    <p>
-                    <strong>Phone:</strong><br>
-                    <!-- This input field is bound to 'lastName' in the 'order' object -->
-                    <input  v-model.number="Orders.contactno" class="form-control" type="number" />
-                    </p>
-                    <p>
-                    <strong>Email:</strong><br>
-                    <!-- This input field is bound to 'lastName' in the 'order' object -->
-                    <input  v-model.number="Users.email" class="form-control" type="email" />
-                    </p>
-                    <p>
-                    <strong>Password:</strong><br>
-                    <!-- This input field is bound to 'lastName' in the 'order' object -->
-                    <input  v-model.number="Users.pass" class="form-control" type="password" />
-                    </p>
-                    
-                    <div class="bg-grey">
-                        <h2>Order Information</h2>
-                        <div class="clearfix"></div>
-                        <p>Name: {{Orders.name}}</p>
-                        <p>Phone: {{Orders.contactno}}</p>
-                        <p>Your email: {{Users.email}}</p>
-                        
+                        <br>
+                        <br>
+                        <hr>
+                        <h3>Checkout Page</h3>
+                        <p>
+                            <strong>Name:</strong><br>
+                            <!-- This input field is bound to 'firstName' in the 'order' object -->
+                            <input v-model="Orders.name" class="form-control" />
+                        </p>
+                        <p>
+                            <strong>Phone:</strong><br>
+                            <!-- This input field is bound to 'lastName' in the 'order' object -->
+                            <input v-model.number="Orders.contactno" class="form-control" type="number" />
+                        </p>
+                        <p>
+                            <strong>Email:</strong><br>
+                            <!-- This input field is bound to 'lastName' in the 'order' object -->
+                            <input v-model.number="Users.email" class="form-control" type="email" />
+                        </p>
+                        <p>
+                            <strong>Password:</strong><br>
+                            <!-- This input field is bound to 'lastName' in the 'order' object -->
+                            <input v-model.number="Users.pass" class="form-control" type="password" />
+                        </p>
 
-                        <button v-on:click="submitForm" class="btn btn-success">Place Order</button>
-                    </div>
+                        <div class="bg-grey">
+                            <h2>Order Information</h2>
+                            <div class="clearfix"></div>
+                            <p>Name: {{Orders.name}}</p>
+                            <p>Phone: {{Orders.contactno}}</p>
+                            <p>Your email: {{Users.email}}</p>
 
-                    
+                            <button v-on:click="submitForm" class="btn btn-success">Place Order</button>
+                        </div>
+
+
                     </div>
                 </div>
+                
             </div>
-            </main>
-            <button @click="addItemtoDB">
-                <span class="fas fa-save"></span>
-                Test Insert Data Lesson
-           </button>
+        
+            <br>
+        <button @click="addItemtoDB" class="btn btn-success" style="width:100%;">
+            Add Lesson
+        </button>
+        </main>
+
+        
     </div>
 
-<script>
-let BookSys = new Vue({ // the root Vue instance
-el: '#VueApp',
-    data: { 
-        website_title: 'After School Class App - Vue Web Based App',
-        // Getting VUE Objects from subjects.js
-        subjects: [],
-        cart: [], // array to store items in shopping cart
-        ToggleCheckout: true,
-        sorted:"",
-        // canAddToCart: false,
-        Orders:{
-            name: "",
-            contactno: "",
-            lesson_id: "",
-            spaces: "",
-        },
-        Users:{
-            name: "",
-            email: "",
-            pass: "",
-        },
-        search: '',
-        viewSearchResult: false,
-        Availability: "Yes",
-    },
-    created: function() {
-            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons").then(
-                function(response) {
-                    response.json().then(
-                        function(json) {
-                        BookSys.subjects = json;
-                        console.log(BookSys.subjects);
-                        }
-                    )
-                }
-            );
-        },
-    methods: {
-        addItemtoDB(){
-                const addLesson = {
+    <script>
+        let BookSys = new Vue({ // the root Vue instance
+            el: '#VueApp',
+            data: {
+                website_title: 'After School Class App - Vue Web Based App',
+                // Getting VUE Objects from subjects.js
+                subjects: [],
+                cart: [], // array to store items in shopping cart
+                ToggleCheckout: true,
+                sorted: "",
+                // canAddToCart: false,
+                Orders: {
+                    name: "",
+                    contactno: "",
+                    lesson_id: "",
+                    spaces: "",
+                },
+                Users: {
+                    name: "",
+                    email: "",
+                    pass: "",
+                },
+                search: '',
+                viewSearchResult: false,
+                Availability: "Yes",
+            },
+            created: function () {
+                fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons").then(
+                    function (response) {
+                        response.json().then(
+                            function (json) {
+                                BookSys.subjects = json;
+                                console.log(BookSys.subjects);
+                            }
+                        )
+                    }
+                );
+            },
+            methods: {
+                addItemtoDB() {
+                    const addLesson = {
                         "id": 1,
-                        "subject": "English Level 3",
-                        "image": "images/book-english.png",
+                        "subject": "English Level 3X",
+                        "image": "img/english.png",
                         "price": 40,
                         "spaces": 25,
                         "location": "London",
-                }
-
-                fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons",{
-                    method: "POST",
-                    headers:{ "Content-Type": "application/json", },
-                    body: JSON.stringify(addLesson)
-                });
-            },
-        addItemtocart(subject) {
-            this.cart.push( subject );
-            console.log(this.cart);
-        },
-        showCheckout() {
-            this.ToggleCheckout = this.ToggleCheckout ? false : true;
-        },
-        submitForm() {
-            if (this.cart.length == null  || this.cart.length === 0) {
-                alert('Please cart any item.');
-                return;
-            }
-            const addUser = {
-                "name": this.Orders.name,
-                "email": this.Users.email,
-                "pass": this.Users.password
-            }
-            
-            const addOrder = {
-                "name": this.Orders.name,
-                "contactno": this.Orders.contactno,
-                "lesson_id": this.Orders.lesson_id,
-                "spaces": this.Orders.spaces,
-            }
-            for (let i = 0; i < this.cart.length; i++) {       
-                if(BookSys.subjects.id = this.cart[i]){
-                    let ObjectLesson = this.cart.filter(id => id === this.cart[i]);
-                    console.log(ObjectLesson[i].subject);
                     }
-            }
-            const UpdatingLesson = {
-                "id": BookSys.subjects.id,
-                "spaces": "1",
-            }
-            // fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/"+BookSys.subjects.id,{
-            //     method: "PUT",
-            //     headers:{ "Content-Type": "application/json", },
-            //     body: JSON.stringify(UpdatingLesson)
-            // })
+                    fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", },
+                        body: JSON.stringify(addLesson)
+                    });
+                },
+                addItemtocart(subject) {
+                    this.cart.push(subject);
+                    subject.spaces -= 1;
+                    console.log(this.cart);
+                },
+                showCheckout() {
+                    this.ToggleCheckout = this.ToggleCheckout ? false : true;
+                },
+                submitForm() {
+                    if (this.cart.length == null || this.cart.length === 0) {
+                        alert('Please cart any item.');
+                        return;
+                    }
+                    const addUser = {
+                        "name": this.Orders.name,
+                        "email": this.Users.email,
+                        "pass": this.Users.pass
+                    }
+                    fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", },
+                        body: JSON.stringify(addUser)
+                    })
 
-            // fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
-            //     method: "POST",
-            //     headers:{ "Content-Type": "application/json", },
-            //     body: JSON.stringify(addUser)
-            // })
+                    for (let i = 0; i < this.cart.length; i++) {
+                        const addOrder = {
+                            "name": this.Orders.name,
+                            "contactno": this.Orders.contactno,
+                            "lesson_id": this.cart[i].id,
+                            "spaces": 1,
+                        }
 
-            // fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders",{
-            //     method: "POST",
-            //     headers:{ "Content-Type": "application/json", },
-            //     body: JSON.stringify(addOrder)
-            // })
+                        fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json", },
+                            body: JSON.stringify(addOrder)
+                        })
 
-            alert('Order has been placed.');
-        },
-        onKeyUp(){
-            this.viewSearchResult = true;
-            if(this.search === ""){
-                this.viewSearchResult = false;    
+                        if (BookSys.subjects[i].id = this.cart[i].id) {
+                            console.log(BookSys.subjects[i].id);
+                            console.log(this.cart[i].id);
+
+                            let ObjectLesson = BookSys.subjects.filter(subject => subject.id === this.cart[i]);
+
+                            UpdateSpaces = BookSys.subjects[i].spaces;
+
+                            const UpdatingLesson = {
+                                "id": BookSys.subjects[i].id,
+                                "spaces": UpdateSpaces - 1,
+                            }
+
+                            console.log(UpdatingLesson);
+                            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/" + BookSys.subjects[i].id, {
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json", },
+                                body: JSON.stringify(UpdatingLesson)
+                            })
+
+
+                        }
+                    }
+
+                    alert('Order has been placed.');
+
+                },
+                onKeyUp() {
+                    this.viewSearchResult = true;
+                    if (this.search === "") {
+                        this.viewSearchResult = false;
+                    }
+                },
+                canAddToCart(subject) {
+                    return this.subject.spaces > this.cartItemCount(subject.id);
+                },
+                cartCount(id) {
+                    let count = 0;
+                    for (let i = 0; i < this.cart.length; i++) {
+                        if (this.cart[i] === id) {
+                            count++;
+                        }
+                    }
+                    return count;
+                }
+            },
+            computed: {
+                cartItemCount: function () { // the property name
+                    return this.cart.length || "";
+                },
+                checkLeftSpaces() {
+                    return subjects.spaces - cartItemCount;
+                },
+                SearchFiltered() {
+                    return this.subjects.filter(subject => {
+                        return subject.subject.toLowerCase().includes(this.search.toLowerCase())
+                    })
+                },
+                sorting() {
+                    // SORT BY PRICE
+                    function compare(a, b) {
+                        if (a.price > b.price) return 1;
+                        if (a.price < b.price) return -1;
+                        return 0;
+                    }
+                    // sort the 'products' array and return it
+                    return this.subjects.sort(compare);
+                }
             }
-        },
-        canAddToCart(subject) {
-        return this.subject.spaces > this.cartItemCount(subject.id);
-        },
-        cartCount(id) {
-        let count = 0;
-        for(let i = 0; i < this.cart.length; i++) {
-        if (this.cart[i] === id) {
-        count++;
-        }
-        }
-        return count;
-        }
-    },
-    computed: {
-        cartItemCount: function() { // the property name
-        return this.cart.length || "";
-        },
-        checkLeftSpaces(){       
-        return subjects.spaces - cartItemCount;
-        },
-        SearchFiltered() {
-        return this.subjects.filter(subject => {
-            return subject.subject.toLowerCase().includes(this.search.toLowerCase())
         })
-        },
-        SortByPrice() {
-            // SORT BY PRICE
-            function compare(a, b) {
-            if (a.price > b.price) return 1;
-            if (a.price < b.price) return -1;
-            return 0;
-            }
-            // sort the 'products' array and return it
-            return this.subjects.sort(compare);
-        }
-    }
-})
-</script>
+    </script>
 </body>
+
 </html>

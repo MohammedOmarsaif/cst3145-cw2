@@ -8,10 +8,8 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/stylesheet.css">
-    <!-- Place your Font Awesome kit's code here -->
     <script src="https://kit.fontawesome.com/baa20b8907.js" crossorigin="anonymous"></script>
     <script src="js/vue-2.7.8.js"></script>
-    <!-- <script src="js/subjects.js"></script> -->
 </head>
 <body>
     
@@ -146,7 +144,7 @@ el: '#VueApp',
     data: { 
         website_title: 'After School Class App - Vue Web Based App',
         // Getting VUE Objects from subjects.js
-        subjects: subjects,
+        subjects: [],
         cart: [], // array to store items in shopping cart
         ToggleCheckout: true,
         // canAddToCart: false,
@@ -158,6 +156,18 @@ el: '#VueApp',
         viewSearchResult: false,
         Availability: "Yes",
     },
+    created: function() {
+            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons").then(
+                function(response) {
+                    response.json().then(
+                        function(json) {
+                        BookSys.subjects = json;
+                        console.log(subjects);
+                        }
+                    )
+                }
+            );
+        },
     methods: {
         addItemtocart(subject) {
             this.cart.push( subject.id );

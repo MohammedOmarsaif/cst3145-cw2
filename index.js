@@ -50,9 +50,9 @@ app.get("/", function (req, res) {
     res.send("Welcome");
 });
 
-app.route("/api/:collection?/:opt?/:param?").get(
+app.route("/api/:collection?/:opt?/:key?").get(
     async function (req, res) {
-        const { collection, opt, param } = req.params;
+        const { collection, opt, key } = req.params;
 
         if (!collection) {
 
@@ -61,14 +61,17 @@ app.route("/api/:collection?/:opt?/:param?").get(
         } else if (!opt) {
 
             coll = db.collection(collection);
-
             const coll_obj = await coll.find({}).toArray();
-
             res.send(coll_obj);
 
-        } else if (!param) {
-
+        } else if (!key) {
+            
             res.send("Collection: " + collection + " > Option: " + opt);
+            
+
+        }else{
+
+            res.send("Collection: " + collection + " > Option: " + opt + " Key: "+ key);
 
         }
     }

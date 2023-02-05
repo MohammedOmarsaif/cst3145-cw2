@@ -228,6 +228,19 @@ el: '#VueApp',
                 "spaces": this.Orders.spaces,
             }
             
+            let ObjectLesson = cart.filter(lesson => lesson.id === this.cart[i]);
+            console.log(ObjectLesson[0].spaces);
+            
+            const UpdatingLesson = {
+                "id": BookSys.subjects.id,
+                "spaces": ObjectLesson[0].spaces,
+            }
+            fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/"+BookSys.subjects.id,{
+                method: "PUT",
+                headers:{ "Content-Type": "application/json", },
+                body: JSON.stringify(UpdatingLesson)
+            })
+
             fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
                 method: "POST",
                 headers:{ "Content-Type": "application/json", },

@@ -57,14 +57,14 @@
                 <div class="col-md-12">
                     <h3 class="text-center">List of Subjects:</h3>
                     <br>
-                    <input type="radio" v-on:click="ByPrice()" id="byprice" value="byprice" v-model="sorted" />
+                    <input type="radio" v-on:click="sorting()" name="sortby" id="byprice" value="byprice" v-model="sortby" />
                     <label for="byprice">Sort By Price</label>
 
-                    <input type="radio" v-on:click="byname()" id="byname" value="byname" v-model="sorted" />
-                    <label for="byname">Sort By Ascending</label>
+                    <input type="radio" name="sorted" id="byname" value="byname" v-model="sorted" />
+                    <label for="byname">Ascending</label>
 
-                    <input type="radio" v-on:click="byname()" id="bydesc" value="bydesc" v-model="sorted" />
-                    <label for="bydesc">Sort By Descending</label>
+                    <input type="radio" name="sorted" id="bydesc" value="bydesc" v-model="sorted" />
+                    <label for="bydesc">Descending</label>
                 </div>
                 <div v-for="subject in subjects" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
 
@@ -183,6 +183,7 @@
                 cart: [], // array to store items in shopping cart
                 ToggleCheckout: true,
                 sorted: "",
+                sortby:"",
                 // canAddToCart: false,
                 Orders: {
                     name: "",
@@ -334,8 +335,7 @@
                         return subject.subject.toLowerCase().includes(this.search.toLowerCase())
                     })
                 },
-                ByPrice() {
-                    
+                sorting() {
                     // SORT BY PRICE
                     function compare(a, b) {
                         if (a.price > b.price) return 1;

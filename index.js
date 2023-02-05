@@ -50,7 +50,7 @@ app.get("/", function (req, res) {
     res.send("Welcome");
 });
 
-app.route("/api/:collection?/:opt?/:key?").get(
+app.route("/api/:collection?/").get(
     async function (req, res) {
         const { collection, opt, key } = req.params;
 
@@ -67,10 +67,9 @@ app.route("/api/:collection?/:opt?/:key?").get(
         } else if (!key) {
             
             res.send("Collection: " + collection + " > Option: " + opt);
-            
 
         }else{
-
+            
             res.send("Collection: " + collection + " > Option: " + opt + " Key: "+ key);
 
         }

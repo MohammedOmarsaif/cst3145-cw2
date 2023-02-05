@@ -6,5 +6,24 @@
     "mongodb": "^5.0.0",
     "morgan": "^1.10.0",
     "properties-reader": "^2.2.0"
-  }
+  },
+  "name": "cst3145-coursework2",
+  "description": "��#\u0000 \u0000c\u0000s\u0000t\u00003\u00001\u00004\u00005\u0000-\u0000c\u0000w\u00002\u0000\r\u0000 \u0000",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohammedOmarsaif/cst3145-cw2.git"
+  },
+  "author": "Omar Saif",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MohammedOmarsaif/cst3145-cw2/issues"
+  },
+  "homepage": "https://github.com/MohammedOmarsaif/cst3145-cw2#readme"
 }

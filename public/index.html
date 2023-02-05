@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/stylesheet.css">
     <script src="httpss://kit.fontawesome.com/baa20b8907.js" crossorigin="anonymous"></script>
     <script src="js/vue-2.7.8.js"></script>
-    <script src="js/subjects.js"></script>
+    <!-- <script src="js/subjects.js"></script> -->
 </head>
 <body>
     
@@ -160,39 +160,29 @@ el: '#VueApp',
     data: { 
         website_title: 'After School Class App - Vue Web Based App',
         // Getting VUE Objects from subjects.js
-        subjects: subjects,
+        subjects: [],
         cart: [], // array to store items in shopping cart
         ToggleCheckout: true,
         // canAddToCart: false,
-        Orders:{
-            name: this.Orders.name,
-            contactno: this.Orders.contactno,
-            lesson_id: 1,
-            spaces: 1,
-        },
-        Users:{
-            name: this.Orders.name,
-            email: this.Users.email,
-            pass: this.Users.pass,
-        },
+        Orders: [],
+        // {
+            // name: this.Orders.name,
+            // contactno: this.Orders.contactno,
+            // lesson_id: 1,
+            // spaces: 1,
+        // }
+        
+        Users: [],
+        // {
+            // name: this.Orders.name,
+            // email: this.Users.email,
+            // pass: this.Users.pass,
+        // }
         search: '',
         viewSearchResult: false,
         Availability: "Yes",
     },
-    created: function() {
-            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons").then(
-                function(response) {
-                    response.json().then(
-                        function(json) {
-                        BookSys.subjects = json;
-                        console.log(BookSys.subjects);
-                        }
-                    )
-                }
-            );
-        },
     methods: {
-        
         addItemtoDB(){
                 const addLesson = {
                         "id": 1,
@@ -216,47 +206,47 @@ el: '#VueApp',
             this.ToggleCheckout = this.ToggleCheckout ? false : true;
         },
         submitForm() {
-            if (this.cart.length == null  || this.cart.length === 0) {
-                alert('Please cart any item.');
-                return;
-            }
-            const addUser = {
-                "name": this.Orders.name,
-                "email": this.Users.email,
-                "pass": this.Users.password
-            }
+            // if (this.cart.length == null  || this.cart.length === 0) {
+            //     alert('Please cart any item.');
+            //     return;
+            // }
+            // const addUser = {
+            //     "name": this.Orders.name,
+            //     "email": this.Users.email,
+            //     "pass": this.Users.password
+            // }
             
-            const addOrder = {
-                "name": this.Orders.name,
-                "contactno": this.Orders.contactno,
-                "lesson_id": this.Orders.lesson_id,
-                "spaces": this.Orders.spaces,
-            }
+            // const addOrder = {
+            //     "name": this.Orders.name,
+            //     "contactno": this.Orders.contactno,
+            //     "lesson_id": this.Orders.lesson_id,
+            //     "spaces": this.Orders.spaces,
+            // }
             
-            let ObjectLesson = cart.filter(lesson => lesson.id === this.cart[i]);
-            console.log(ObjectLesson[0].spaces);
+            // let ObjectLesson = cart.filter(lesson => lesson.id === this.cart[i]);
+            // console.log(ObjectLesson[0].spaces);
             
-            const UpdatingLesson = {
-                "id": BookSys.subjects.id,
-                "spaces": ObjectLesson[0].spaces - 1,
-            }
-            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/"+BookSys.subjects.id,{
-                method: "PUT",
-                headers:{ "Content-Type": "application/json", },
-                body: JSON.stringify(UpdatingLesson)
-            })
+            // const UpdatingLesson = {
+            //     "id": BookSys.subjects.id,
+            //     "spaces": ObjectLesson[0].spaces - 1,
+            // }
+            // fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons/"+BookSys.subjects.id,{
+            //     method: "PUT",
+            //     headers:{ "Content-Type": "application/json", },
+            //     body: JSON.stringify(UpdatingLesson)
+            // })
 
-            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
-                method: "POST",
-                headers:{ "Content-Type": "application/json", },
-                body: JSON.stringify(addUser)
-            })
+            // fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/users",{
+            //     method: "POST",
+            //     headers:{ "Content-Type": "application/json", },
+            //     body: JSON.stringify(addUser)
+            // })
 
-            fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders",{
-                method: "POST",
-                headers:{ "Content-Type": "application/json", },
-                body: JSON.stringify(addOrder)
-            })
+            // fetch("https://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/orders",{
+            //     method: "POST",
+            //     headers:{ "Content-Type": "application/json", },
+            //     body: JSON.stringify(addOrder)
+            // })
 
             alert('Order has been placed.');
         },

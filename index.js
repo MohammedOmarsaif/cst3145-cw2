@@ -14,11 +14,27 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("short"));
 
-app.route("/api/:collection/:names/:options").get(
-    async function(req,res){
-        const {collection, names, options} = req.params;
+app.get("/",function(req, res){
+    res.send("Welcome");
+});
 
-        if(!collection){res.send("NOT VALID COLLECTIONS or KEY")}
+app.route("/api/:collection?/:opt?/:param?").get(
+    async function(req,res){
+        const { collection, opt, param} = req.params;
+
+        if(!collection){
+            
+            res.send("NOT VALID collection");
+        
+        } else if(!opt){
+
+            res.send("Collection: " + collection);
+        
+        } else if(!param){
+
+            res.send("Option: " + collection);
+        
+        }
     }
 ).post(
 

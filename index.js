@@ -4,6 +4,24 @@ const morgan = require("morgan");
 var path = require("path");
 var fs = require("fs");
 
+
+let propertiesReader = require("properties-reader");
+let propertiesPath = path.resolve(__dirname, "conf/db.properties");
+let properties = propertiesReader(propertiesPath);
+
+let dbPrefixx = properties.get("db.prefix");
+let dbUsername = properties.get("db.user");
+let dbPwd = properties.get("db.pwd");
+let dbName = properties.get("db.dbName");
+let dbUrl = properties.get("db.dbUrl");
+let dbParams = properties.get("db.params");
+
+const uri = dbPrefixx + dbUsername + ":" + dbPwd + dbUrl + dbParams;
+
+const { MongoClient, ServerApiVersion, ObjectID, ObjectId } = require("mongodb");
+const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
+let db = client.db(dbName);
+
 let app = express();
 
 var staticFolder = path.resolve(__dirname, "public");
@@ -13,6 +31,8 @@ app.set('json spaces', 2);
 app.use(cors());
 app.use(express.json());
 app.use(morgan("short"));
+
+
 
 app.get("/",function(req, res){
     res.send("Welcome");

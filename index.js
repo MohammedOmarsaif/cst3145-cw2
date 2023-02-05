@@ -86,18 +86,31 @@ app.get("/api/sorting/:collection?/:field?/:ordering?", async function (req, res
         });
 
     }
-    else if (!key) res.send("Filter Keys not defined");
+    else if (!field) {
+        res.send({
+            "ERROR": "Sorting require field name. ",
+            "Possible URL": "/api/sorting/lessons/subject/",
+            "Possible URL": "/api/sorting/lessons/subject/1"
+        });
+    }
     else if (!order) {
-        const coll_obj = await coll.find({}).sort({ [key]: 1 }).toArray();
-        res.send(coll_obj);
+
+        const coll_ = await coll.find({}).sort({ [field]: 1 }).toArray();
+
+        res.send(coll_);
+
     }
-    else if (order === "1") {
-        const coll_obj = await coll.find({}).sort({ [key]: 1 }).toArray();
-        res.send(coll_obj);
+    else if (ordering === "1") {
+
+        const coll_ = await coll.find({}).sort({ [field]: 1 }).toArray();
+
+        res.send(coll_);
     }
-    else if (order === "-1") {
-        const coll_obj = await coll.find({}).sort({ [key]: -1 }).toArray();
-        res.send(coll_obj);
+    else if (ordering === "-1") {
+
+        const coll_ = await coll.find({}).sort({ [field]: -1 }).toArray();
+
+        res.send(coll_);
     }
 
 });

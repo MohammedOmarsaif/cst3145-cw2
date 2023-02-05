@@ -187,6 +187,23 @@ el: '#VueApp',
             );
         },
     methods: {
+        
+        addItemtoDB(){
+                const addLesson = {
+                        "id": 1,
+                        "subject": "English Level 3",
+                        "image": "images/book-english.png",
+                        "price": 40,
+                        "spaces": 25,
+                        "location": "London",
+                }
+
+                fetch("http://cst3145cw2-env.eba-4qwhppzp.us-east-1.elasticbeanstalk.com/api/lessons",{
+                    method: "POST",
+                    headers:{ "Content-Type": "application/json", },
+                    body: JSON.stringify(addLesson)
+                });
+            },
         addItemtocart(subject) {
             this.cart.push( subject.id );
         },

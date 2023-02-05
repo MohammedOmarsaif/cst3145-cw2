@@ -32,7 +32,7 @@ app.route("/api/:collection?/:opt?/:param?").get(
         
         } else if(!param){
 
-            res.send("Option: " + collection);
+            res.send("Collection: " + collection + " > Option: " + collection);
         
         }
     }

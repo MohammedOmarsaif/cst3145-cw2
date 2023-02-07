@@ -141,6 +141,7 @@ app.get("/api/find/:collection?/:value?", async function (req, res) {
         coll = db.collection(collection);
 
         const coll_obj = await coll.find({}).toArray();
+        
         const coll_ = coll_obj.filter(doc => doc.subject.toLowerCase().includes(value.toLowerCase()));
 
         res.send(coll_);

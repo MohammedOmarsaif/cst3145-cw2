@@ -131,7 +131,7 @@ app.get("/api/find/:collection?/:value?", async function (req, res) {
         res.send({
             "ERROR": "Its look like you provide incomplete URL, while you are finding record you need to provide which keyword you are looking for inside collection",
             "API": {
-                "example": process.env.URL || "http://localhost:3000" + "/api/find/lessons/Science",
+                "example": process.env.URL || "http://localhost:3000" + "/api/find/lessons/English",
             }
         });
 
